@@ -1,14 +1,14 @@
 package com.example.TransferProject.orm;
 
+import com.example.TransferProject.tca.TransactionStatusNew;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transaction_record")
-
 public class TransactionRecord {
-    public enum Status { SUCCESS, FAILED }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class TransactionRecord {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private Status status;
+    private TransactionStatusNew status;
 
     @Column(name = "fail_reason")
     private String failReason;
@@ -35,7 +35,7 @@ public class TransactionRecord {
 
     public TransactionRecord() {}
 
-    public TransactionRecord(Long fromAccountId, Long toAccountId, BigDecimal amount, Status status, String failReason) {
+    public TransactionRecord(Long fromAccountId, Long toAccountId, BigDecimal amount, TransactionStatusNew status, String failReason) {
         this.fromAccountId = fromAccountId;
         this.toAccountId = toAccountId;
         this.amount = amount;

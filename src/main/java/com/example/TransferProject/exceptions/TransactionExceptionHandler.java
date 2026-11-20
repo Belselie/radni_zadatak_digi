@@ -54,14 +54,14 @@ public class TransactionExceptionHandler {
         return problem;
     }
 
-    @ExceptionHandler(Exception.class)
-    public ProblemDetail handleAll(Exception ex){
-
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                ex.getMessage()
-        );
-        problem.setTitle("Internal server error");
-        return problem;
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ProblemDetail handleAll(Exception ex){
+//
+//        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+//                HttpStatus.INTERNAL_SERVER_ERROR,
+//                ex.getMessage()
+//        );
+//        problem.setTitle("Internal server error");
+//        return problem;
+//    }
 }

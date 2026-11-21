@@ -5,7 +5,8 @@ import java.math.BigDecimal;
 public record DraftTransactionAction(
         Long fromAccountId,
         Long toAccountId,
-        BigDecimal amount_rsd
-) implements TransactionActionNew {
+        BigDecimal amount_rsd,
+        String transactionId
+) implements TransactionAction {
 
 }

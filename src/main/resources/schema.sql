@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS user_account (
 
 CREATE TABLE IF NOT EXISTS transaction_record (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    transaction_id VARCHAR(20) NOT NULL,
     from_account_id BIGINT NOT NULL,
     to_account_id BIGINT NOT NULL,
     amount_rsd DECIMAL(19,2) NOT NULL,

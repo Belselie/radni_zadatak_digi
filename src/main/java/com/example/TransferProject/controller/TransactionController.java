@@ -8,10 +8,7 @@ import com.example.TransferProject.tca.actions.DraftTransactionAction;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -27,12 +24,16 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<TransactionStatus> transfer(@Valid @RequestBody TransactionRequest request) {
+    public ResponseEntity<TransactionStatus> transfer(@RequestHeader(value = "x-transaction-id", required = true) String transactionId,
+                                                      @Valid @RequestBody TransactionRequest request) {
 
         TransactionState state;
-
-        System.out.println("Got Req Body");
         StoreNew store = stores.getObject();
+
+        if (transactionId == null || transactionId.isBlank()){
+            System.out.println("No transaction id");
+            return ResponseEntity.badRequest().body(TransactionStatus.FAILED);
+        }
 
         if(Objects.equals(request.fromUserAccountId(),request.toUserAccountId())){
             System.out.println("Accounts are the same");
@@ -44,10 +45,8 @@ public class TransactionController {
             return ResponseEntity.badRequest().body(TransactionStatus.FAILED);
         }
 
-        System.out.println("Entering store");
-        state = store.send(new DraftTransactionAction(request.fromUserAccountId(), request.toUserAccountId(), request.amount_rsd()));
+        state = store.send(new DraftTransactionAction(request.fromUserAccountId(), request.toUserAccountId(), request.amount_rsd(), transactionId));
 
-        System.out.println("return ready");
         return ResponseEntity.ok(state.status());
 
     }

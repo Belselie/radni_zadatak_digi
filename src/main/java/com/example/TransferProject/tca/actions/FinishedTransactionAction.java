@@ -5,5 +5,5 @@ import com.example.TransferProject.tca.TransactionStatus;
 public record FinishedTransactionAction(
         TransactionStatus status,
         String error
-) implements TransactionActionNew {
+) implements TransactionAction {
 }

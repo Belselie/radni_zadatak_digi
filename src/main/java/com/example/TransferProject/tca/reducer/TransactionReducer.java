@@ -9,34 +9,37 @@ import com.example.TransferProject.tca.effects.CreateTransactionEffect;
 import com.example.TransferProject.tca.effects.DraftTransactionEffect;
 import com.example.TransferProject.tca.effects.FinishedTransactionEffect;
 import com.example.TransferProject.tca.effects.PendingTransactionEffect;
+import com.example.TransferProject.tca.service.TransferBalanceService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TransactionReducer {
     public TransactionRecordRepository transactionRecordRepository;
     public UserRepository userRepository;
+    public TransferBalanceService transferBalanceService;
 
-    public TransactionReducer(TransactionRecordRepository transactionRecordRepository, UserRepository userRepository){
+    public TransactionReducer(TransactionRecordRepository transactionRecordRepository, UserRepository userRepository, TransferBalanceService transferBalanceService){
         this.transactionRecordRepository=transactionRecordRepository;
         this.userRepository=userRepository;
+        this.transferBalanceService=transferBalanceService;
     }
 
-    public TransactionReducerResult reduce(TransactionState state, TransactionActionNew action) {
+    public TransactionReducerResult reduce(TransactionState state, TransactionAction action) {
         TransactionState transaction;
         TransactionReducerResult result;
         switch(action) {
             case DraftTransactionAction draftTransactionAction: {
 
-                transaction = new TransactionState(draftTransactionAction.fromAccountId(), draftTransactionAction.toAccountId(), draftTransactionAction.amount_rsd(), TransactionStatus.DRAFT, null);
+                transaction = new TransactionState(draftTransactionAction.fromAccountId(), draftTransactionAction.toAccountId(), draftTransactionAction.amount_rsd(), TransactionStatus.DRAFT, null, draftTransactionAction.transactionId());
 
-                result = new TransactionReducerResult(transaction, new DraftTransactionEffect(transaction));
+                result = new TransactionReducerResult(transaction, new DraftTransactionEffect());
 
                 break;
             }
 
             case CreateTransactionAction createTransactionAction: {
 
-                transaction = new TransactionState(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), TransactionStatus.CREATED, null);
+                transaction = new TransactionState(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), TransactionStatus.CREATED, null, state.transactionId());
 
                 result = new TransactionReducerResult(transaction, new CreateTransactionEffect(transactionRecordRepository, transaction));
                 System.out.println("Returned CreateTransactionEffect. State is: " + transaction.status());
@@ -45,16 +48,16 @@ public class TransactionReducer {
 
             case PendingTransactionAction pendingTransactionAction: {
 
-                transaction = new TransactionState(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), TransactionStatus.PENDING, null);
+                transaction = new TransactionState(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), TransactionStatus.PENDING, null, state.transactionId());
 
-                result = new TransactionReducerResult(transaction, new PendingTransactionEffect(userRepository,transactionRecordRepository, transaction));
+                result = new TransactionReducerResult(transaction, new PendingTransactionEffect(transactionRecordRepository, transaction, transferBalanceService));
                 System.out.println("Returned PendingTransactionEffect. State is: " + transaction.status());
                 break;
             }
 
             case FinishedTransactionAction finishedTransactionAction: {
 
-                transaction = new TransactionState(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), finishedTransactionAction.status(), finishedTransactionAction.error());
+                transaction = new TransactionState(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), finishedTransactionAction.status(), finishedTransactionAction.error(), state.transactionId());
 
                 result = new TransactionReducerResult(transaction, new FinishedTransactionEffect(transactionRecordRepository, transaction));
 

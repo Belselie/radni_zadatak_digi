@@ -1,10 +1,10 @@
 package com.example.TransferProject.tca.effects;
 
-import com.example.TransferProject.tca.actions.TransactionActionNew;
+import com.example.TransferProject.tca.actions.TransactionAction;
 
 public interface Effect {
-    public TransactionActionNew run();
-    public static TransactionActionNew none() {
+    public TransactionAction run();
+    public static TransactionAction none() {
         return null;
     }
 }

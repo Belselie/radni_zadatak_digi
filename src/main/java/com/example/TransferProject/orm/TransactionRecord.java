@@ -14,6 +14,9 @@ public class TransactionRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "transaction_id", nullable = false, length = 20)
+    private String transactionId;
+
     @Column(name = "from_account_id", nullable = false)
     private Long fromAccountId;
 
@@ -35,7 +38,8 @@ public class TransactionRecord {
 
     public TransactionRecord() {}
 
-    public TransactionRecord(Long fromAccountId, Long toAccountId, BigDecimal amount, TransactionStatus status, String failReason) {
+    public TransactionRecord(String transactionId, Long fromAccountId, Long toAccountId, BigDecimal amount, TransactionStatus status, String failReason) {
+        this.transactionId = transactionId;
         this.fromAccountId = fromAccountId;
         this.toAccountId = toAccountId;
         this.amount = amount;

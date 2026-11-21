@@ -7,11 +7,12 @@ public record TransactionState(
         Long toUserAccountId,
         BigDecimal amount_rsd,
         TransactionStatus status,
-        String error
+        String error,
+        String transactionId
 ) {
 
     static TransactionState init(){
-        return new TransactionState(null,null,null,null,null);
+        return new TransactionState(null,null,null,null,null, null);
 
     }
 }

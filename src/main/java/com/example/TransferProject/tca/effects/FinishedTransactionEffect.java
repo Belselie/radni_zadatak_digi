@@ -3,7 +3,7 @@ package com.example.TransferProject.tca.effects;
 import com.example.TransferProject.orm.TransactionRecord;
 import com.example.TransferProject.repository.TransactionRecordRepository;
 import com.example.TransferProject.tca.TransactionState;
-import com.example.TransferProject.tca.actions.TransactionActionNew;
+import com.example.TransferProject.tca.actions.TransactionAction;
 
 public class FinishedTransactionEffect implements Effect {
 
@@ -16,11 +16,9 @@ public class FinishedTransactionEffect implements Effect {
     }
 
     @Override
-    public TransactionActionNew run() {
-        System.out.println("Finished writing. State is: " + transactionState.status());
-        TransactionRecord t = new TransactionRecord(transactionState.fromUserAccountId(), transactionState.toUserAccountId(), transactionState.amount_rsd(), transactionState.status(), transactionState.error());
+    public TransactionAction run() {
+        TransactionRecord t = new TransactionRecord(transactionState.transactionId(), transactionState.fromUserAccountId(), transactionState.toUserAccountId(), transactionState.amount_rsd(), transactionState.status(), transactionState.error());
         transactionRecordRepository.save(t);
-        System.out.println("Finished done writing");
         return null;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.TransferProject.orm;
 
-import com.example.TransferProject.tca.TransactionStatusNew;
+import com.example.TransferProject.tca.TransactionStatus;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -25,7 +25,7 @@ public class TransactionRecord {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private TransactionStatusNew status;
+    private TransactionStatus status;
 
     @Column(name = "fail_reason")
     private String failReason;
@@ -35,7 +35,7 @@ public class TransactionRecord {
 
     public TransactionRecord() {}
 
-    public TransactionRecord(Long fromAccountId, Long toAccountId, BigDecimal amount, TransactionStatusNew status, String failReason) {
+    public TransactionRecord(Long fromAccountId, Long toAccountId, BigDecimal amount, TransactionStatus status, String failReason) {
         this.fromAccountId = fromAccountId;
         this.toAccountId = toAccountId;
         this.amount = amount;

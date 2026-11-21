@@ -1,9 +1,9 @@
 package com.example.TransferProject.tca.actions;
 
-import com.example.TransferProject.tca.TransactionStatusNew;
+import com.example.TransferProject.tca.TransactionStatus;
 
 public record FinishedTransactionAction(
-        TransactionStatusNew status,
+        TransactionStatus status,
         String error
 ) implements TransactionActionNew {
 }

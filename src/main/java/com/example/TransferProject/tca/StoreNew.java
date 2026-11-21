@@ -13,14 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Transactional
 public class StoreNew {
-    public TransactionStateNew stateNew=TransactionStateNew.init();
+    public TransactionState stateNew= TransactionState.init();
     public TransactionReducer transactionReducer;
 
     public StoreNew(@Autowired TransactionReducer transactionReducer) {
         this.transactionReducer = transactionReducer;
     }
 
-    public TransactionStateNew send(TransactionActionNew action) {
+    public TransactionState send(TransactionActionNew action) {
         TransactionReducerResult result;
         while (action != null) {
             result = transactionReducer.reduce(stateNew, action);

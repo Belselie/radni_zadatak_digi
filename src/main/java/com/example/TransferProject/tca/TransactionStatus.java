@@ -1,6 +1,6 @@
 package com.example.TransferProject.tca;
 
-public enum TransactionStatusNew {
+public enum TransactionStatus {
     DRAFT,
     CREATED,
     PENDING,

@@ -2,8 +2,8 @@ package com.example.TransferProject.tca.reducer;
 
 import com.example.TransferProject.repository.TransactionRecordRepository;
 import com.example.TransferProject.repository.UserRepository;
-import com.example.TransferProject.tca.TransactionStateNew;
-import com.example.TransferProject.tca.TransactionStatusNew;
+import com.example.TransferProject.tca.TransactionState;
+import com.example.TransferProject.tca.TransactionStatus;
 import com.example.TransferProject.tca.actions.*;
 import com.example.TransferProject.tca.effects.CreateTransactionEffect;
 import com.example.TransferProject.tca.effects.DraftTransactionEffect;
@@ -21,13 +21,13 @@ public class TransactionReducer {
         this.userRepository=userRepository;
     }
 
-    public TransactionReducerResult reduce(TransactionStateNew state, TransactionActionNew action) {
-        TransactionStateNew transaction;
+    public TransactionReducerResult reduce(TransactionState state, TransactionActionNew action) {
+        TransactionState transaction;
         TransactionReducerResult result;
         switch(action) {
             case DraftTransactionAction draftTransactionAction: {
 
-                transaction = new TransactionStateNew(draftTransactionAction.fromAccountId(), draftTransactionAction.toAccountId(), draftTransactionAction.amount_rsd(), TransactionStatusNew.DRAFT, null);
+                transaction = new TransactionState(draftTransactionAction.fromAccountId(), draftTransactionAction.toAccountId(), draftTransactionAction.amount_rsd(), TransactionStatus.DRAFT, null);
 
                 result = new TransactionReducerResult(transaction, new DraftTransactionEffect(transaction));
 
@@ -36,7 +36,7 @@ public class TransactionReducer {
 
             case CreateTransactionAction createTransactionAction: {
 
-                transaction = new TransactionStateNew(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), TransactionStatusNew.CREATED, null);
+                transaction = new TransactionState(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), TransactionStatus.CREATED, null);
 
                 result = new TransactionReducerResult(transaction, new CreateTransactionEffect(transactionRecordRepository, transaction));
                 System.out.println("Returned CreateTransactionEffect. State is: " + transaction.status());
@@ -45,7 +45,7 @@ public class TransactionReducer {
 
             case PendingTransactionAction pendingTransactionAction: {
 
-                transaction = new TransactionStateNew(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), TransactionStatusNew.PENDING, null);
+                transaction = new TransactionState(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), TransactionStatus.PENDING, null);
 
                 result = new TransactionReducerResult(transaction, new PendingTransactionEffect(userRepository,transactionRecordRepository, transaction));
                 System.out.println("Returned PendingTransactionEffect. State is: " + transaction.status());
@@ -54,7 +54,7 @@ public class TransactionReducer {
 
             case FinishedTransactionAction finishedTransactionAction: {
 
-                transaction = new TransactionStateNew(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), finishedTransactionAction.status(), finishedTransactionAction.error());
+                transaction = new TransactionState(state.fromUserAccountId(), state.toUserAccountId(), state.amount_rsd(), finishedTransactionAction.status(), finishedTransactionAction.error());
 
                 result = new TransactionReducerResult(transaction, new FinishedTransactionEffect(transactionRecordRepository, transaction));
 

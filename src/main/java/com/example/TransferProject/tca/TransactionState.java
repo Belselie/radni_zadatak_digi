@@ -2,16 +2,16 @@ package com.example.TransferProject.tca;
 
 import java.math.BigDecimal;
 
-public record TransactionStateNew(
+public record TransactionState(
         Long fromUserAccountId,
         Long toUserAccountId,
         BigDecimal amount_rsd,
-        TransactionStatusNew status,
+        TransactionStatus status,
         String error
 ) {
 
-    static TransactionStateNew init(){
-        return new TransactionStateNew(null,null,null,null,null);
+    static TransactionState init(){
+        return new TransactionState(null,null,null,null,null);
 
     }
 }

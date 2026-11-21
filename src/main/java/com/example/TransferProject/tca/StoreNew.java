@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StoreNew {
-    public TransactionState stateNew= TransactionState.init();
+    public TransactionState state = TransactionState.init();
     public TransactionReducer transactionReducer;
 
     public StoreNew(@Autowired TransactionReducer transactionReducer) {
@@ -21,8 +21,8 @@ public class StoreNew {
     public TransactionState send(TransactionAction action) {
         TransactionReducerResult result;
         while (action != null) {
-            result = transactionReducer.reduce(stateNew, action);
-            stateNew = result.state();
+            result = transactionReducer.reduce(state, action);
+            state = result.state();
             if (result.effect() != null){
                 action = result.effect().run();
             }
@@ -30,6 +30,6 @@ public class StoreNew {
                 action = null;
             }
         }
-        return stateNew;
+        return state;
     }
 }
